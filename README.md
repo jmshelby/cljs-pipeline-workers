@@ -139,4 +139,4 @@ npx shadow-cljs watch example-main example-worker   # then serve public/ and ope
 
 ## License
 
-TBD
+MIT © 2026 Jake Shelby. See [LICENSE](./LICENSE).

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Real multi-core transducer pipelines for ClojureScript via Web Workers",
+  "license": "MIT",
   "devDependencies": {
     "playwright-core": "^1.61.0",
     "shadow-cljs": "^2.28.0"
