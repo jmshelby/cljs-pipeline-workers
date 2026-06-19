@@ -4,6 +4,7 @@
   "private": true,
   "description": "Real multi-core transducer pipelines for ClojureScript via Web Workers",
   "devDependencies": {
+    "playwright-core": "^1.61.0",
     "shadow-cljs": "^2.28.0"
   }
 }

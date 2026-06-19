@@ -118,6 +118,11 @@
        []
        (when-let [p @default-pool] (pool/shutdown! p) (reset! default-pool nil)))
 
+     (defn pool-size-hint
+       "Suggested parallelism: navigator.hardwareConcurrency (clamped), or 4."
+       []
+       (pool/default-size))
+
      (defn pipeline-workers*
        "Runtime target of the `pipeline-workers` macro. Routes to the dispatch core using the
         :pool from opts, or the configured default pool."

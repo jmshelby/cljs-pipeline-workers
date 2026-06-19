@@ -3,7 +3,7 @@
 ;; Dual-bundle note: the WORKER goog-define must differ per *bundle*, and shadow-cljs
 ;; :closure-defines are per-BUILD (not per-module). So the worker is its own build with
 ;; WORKER=true, while the main/app build has WORKER=false. Same source, two builds.
-{:source-paths ["src" "test"]
+{:source-paths ["src" "test" "example"]
 
  ;; core.async is bundled by shadow-cljs (it pins its own version), so we don't declare it.
  :dependencies [[com.cognitect/transit-cljs "0.8.280"]]
