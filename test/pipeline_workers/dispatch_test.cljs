@@ -2,37 +2,8 @@
   (:require [cljs.test :refer [deftest is testing async]]
             [cljs.core.async :as a :refer [chan close! put! go <! >! onto-chan!]]
             [pipeline-workers.registry :as reg]
-            [pipeline-workers.worker :as w]
-            [pipeline-workers.pool :as pool]
-            [pipeline-workers.dispatch :as d]))
-
-;; In-process pool stub: runs handle-job after a tick, tracking peak concurrency.
-(defn stub-pool [{:keys [delay-ms peak]}]
-  (let [inflight (atom 0)]
-    (reify pool/IPool
-      (submit [_ xf-id input params]
-        (let [ch (chan 1)]
-          (swap! inflight inc)
-          (when peak (swap! peak max @inflight))
-          (go
-            (<! (a/timeout (or delay-ms 1)))
-            (let [job  (cond-> {:type :job :job-id 0 :xf-id xf-id :input input}
-                         (some? params) (assoc :params params))
-                  resp (w/handle-job job)]
-              (swap! inflight dec)
-              (>! ch resp)
-              (close! ch)))
-          ch))
-      (pool-size [_] 4)
-      (shutdown! [_] nil))))
-
-(defn- drain [ch]
-  (let [out (chan)]
-    (go (loop [acc []]
-          (if-let [v (<! ch)]
-            (recur (conj acc v))
-            (do (>! out acc) (close! out)))))
-    out))
+            [pipeline-workers.dispatch :as d]
+            [pipeline-workers.test-support :refer [stub-pool drain]]))
 
 (deftest all-outputs-delivered-unordered
   (async done
