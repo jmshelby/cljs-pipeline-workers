@@ -1,0 +1,9 @@
+{
+  "name": "pipeline-workers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real multi-core transducer pipelines for ClojureScript via Web Workers",
+  "devDependencies": {
+    "shadow-cljs": "^2.28.0"
+  }
+}

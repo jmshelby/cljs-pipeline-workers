@@ -1,0 +1,33 @@
+;; pipeline-workers build config.
+;;
+;; Dual-bundle note: the WORKER goog-define must differ per *bundle*, and shadow-cljs
+;; :closure-defines are per-BUILD (not per-module). So the worker is its own build with
+;; WORKER=true, while the main/app build has WORKER=false. Same source, two builds.
+{:source-paths ["src" "test"]
+
+ ;; core.async is bundled by shadow-cljs (it pins its own version), so we don't declare it.
+ :dependencies [[com.cognitect/transit-cljs "0.8.280"]]
+
+ :builds
+ {;; Unit tests (node). WORKER=true so build-guarded registrations would be retained;
+  ;; tests also register explicitly via the public API.
+  :test  {:target           :node-test
+          :output-to        "out/node-tests.js"
+          :ns-regexp        "-test$"
+          :closure-defines  {pipeline-workers.env/WORKER true}}
+
+  ;; Example app — main thread bundle (WORKER=false -> worker-only registrations DCE'd).
+  :example-main
+  {:target          :browser
+   :output-dir      "public/js/main"
+   :asset-path      "/js/main"
+   :modules         {:main {:init-fn example.app/init}}
+   :closure-defines {pipeline-workers.env/WORKER false}}
+
+  ;; Example app — worker bundle (WORKER=true -> registrations retained).
+  :example-worker
+  {:target          :browser
+   :output-dir      "public/js/worker"
+   :asset-path      "/js/worker"
+   :modules         {:worker {:init-fn example.worker-init/init :web-worker true}}
+   :closure-defines {pipeline-workers.env/WORKER true}}}}
